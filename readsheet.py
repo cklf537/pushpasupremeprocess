@@ -23,7 +23,7 @@ for val in data:
 
 
 #Dropbox 
-dbx = dropbox.Dropbox('sl.Azkq32j4xzC0cBCAYd83q5j04-fDLHhIp5KVdAMzXKAEFMM51jZPI-XXEB7qAt_B2yZZUZCYQ2HNTjB-nMeuLOpWCRIOiHXU3W2EbYtLbfwKywcLsQ1dVCmXEqp3o1suAIbiBbw')
+dbx = dropbox.Dropbox('please enter auth token...')
 usrAccount= dbx.users_get_current_account();
 dbx.files_get_preview("/home")
 print(usrAccount)
