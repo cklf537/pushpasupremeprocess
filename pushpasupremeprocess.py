@@ -3,39 +3,48 @@ from oauth2client.service_account import ServiceAccountCredentials
 import dropbox
 import os
 import configparser
+from util import *
+import gcspreadsheet
 
 # read configuration
-config = configparser.ConfigParser()
-config.read('config.ini')
-config.sections()
+config_file = 'config-dev.ini'
+config_details = getConfigProperties(config_file)
 
 # Reading Google spreedshert from cloud.
 # use creds to create a client to interact with the Google Drive API
 scope = [
-    config['GCP.SPREEDSHEET']['gcp.scope.spreedsheet'],
-    config['GCP.SPREEDSHEET']['gcp.scope.drive']
+    config_details['GCP.SPREEDSHEET'][0]['gcp.scope.spreedsheet'],
+    config_details['GCP.SPREEDSHEET'][1]['gcp.scope.drive']
     ]
-creds = ServiceAccountCredentials.from_json_keyfile_name(config['GCP.SPREEDSHEET']['gcp.key.file'], scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name(config_details['GCP.SPREEDSHEET'][2]['gcp.key.file'], scope)
 client = gspread.authorize(creds)
-gsFileName = config['GCP.SPREEDSHEET']['gcp.spreedsheet.name']
-gs_read_column= config['GCP.SPREEDSHEET']['gcp.spreedsheet.column']
+gsFileName = config_details['GCP.SPREEDSHEET'][3]['gcp.spreedsheet.name']
+gs_read_column= config_details['GCP.SPREEDSHEET'][4]['gcp.spreedsheet.column']
 
-def readFrom_googleSheets(file_name):
-    # sheet = client.open("email-address")
-    sheet = client.open(file_name)
-    # Extract and print all of the values
-    # list_of_hashes = sheet.sheet1.range('B2:')
-    data = sheet.sheet1.col_values(int(gs_read_column))
-    for val in data:
-        if val is not None:
-            print(val.strip() + "\n")
-            # print(len(val))
+def readFrom_googleSheets():
+    gcspreadsheet.process_gcp_spreadsheet(
+        creds, 
+        scope,
+        config_details['GCP.SPREEDSHEET'][5]['gcp.file.id'],
+        config_details['GCP.SPREEDSHEET'][4]['gcp.spreedsheet.column'])
+    # # sheet = client.open("email-address")
+    # sheet = client.open(file_name)
+    # # Extract and print all of the values
+    # # list_of_hashes = sheet.sheet1.range('B2:')
+    # data = sheet.sheet1.col_values(int(gs_read_column))
+    # print(sheet.worksheets())
+    # sheet.sheet1.update('E2', "Hello World");
+    # print(sheet.worksheet())
+    # for val in data:
+    #     if val is not None:
+    #         print(val.strip() + "\n")
+    #         # print(len(val))
 
 
 #Dropbox 
-dbx = dropbox.Dropbox(config['DROPBOX']['dbx.token'])
-Upload_to_path = f"{config['DROPBOX']['dbx.uploadto.path']}"
-upload_from_path = config['DROPBOX']['dbx.uploadfrom.path']
+dbx = dropbox.Dropbox(config_details['DROPBOX'][0]['dbx.token'])
+Upload_to_path = f"{config_details['DROPBOX'][1]['dbx.uploadto.path']}"
+upload_from_path = config_details['DROPBOX'][2]['dbx.uploadfrom.path']
 mdDataObject = []
 
 # Upload files from local folder to dropbox folder 
@@ -60,7 +69,12 @@ def update_file_metadata_object(file_meta_data):
     metaDataObject.append(file_meta_data)
     return metaDataObject;
 
-# Execute methods
-readFrom_googleSheets(gsFileName)
-# upload_files(dbx, upload_from_path, Upload_to_path)
+
+def main():
+    upload_files(dbx, upload_from_path, Upload_to_path)
+    readFrom_googleSheets()
+
+if __name__ == '__main__':
+    main()
+
 
