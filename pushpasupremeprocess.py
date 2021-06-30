@@ -34,19 +34,6 @@ def readFrom_googleSheets():
         gs_sheet_id,
         gs_read_column,
         mdDataObject)
-    # # sheet = client.open("email-address")
-    # sheet = client.open(file_name)
-    # # Extract and print all of the values
-    # # list_of_hashes = sheet.sheet1.range('B2:')
-    # data = sheet.sheet1.col_values(int(gs_read_column))
-    # print(sheet.worksheets())
-    # sheet.sheet1.update('E2', "Hello World");
-    # print(sheet.worksheet())
-    # for val in data:
-    #     if val is not None:
-    #         print(val.strip() + "\n")
-    #         # print(len(val))
-
 
 #Dropbox 
 # Upload files from local folder to dropbox folder 
@@ -73,10 +60,11 @@ def update_file_metadata_object(file_meta_data):
     return metaDataObject;
 
 def main():
-    # print('Analayzing files...')
+    print('Analayzing files...')
     upload_files(dbx, upload_from_path, Upload_to_path)
-    # print('File upload completed successfully!')
+    print('File upload completed successfully!')
     readFrom_googleSheets()
+    print('Spreedsheet updated successfully!')
 
 if __name__ == '__main__':
     main()

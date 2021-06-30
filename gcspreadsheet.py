@@ -14,9 +14,15 @@ def process_gcp_spreadsheet(token, scope, sheetId, rangeName, dbxobject=[]):
     if not values:
         print('No data found.')
     else:
-        print('Name, Major:')
         if len(dbxobject) > 0:
-            for key, row in enumerate(values):
-                util.stripAndCompareFBAndDBXId(dbxobject, row[0])
-                # Print columns A and E, which correspond to indices 0 and 4.
-                print(row)
+             dbxAssetIds = util.stripDbxObjectId(dbxobject)
+             for key, row in enumerate(values):
+                gsEntry = util.stripAndCompareFBAndDBXId(dbxAssetIds, row[0])
+                if gsEntry is not None:
+                    values = [[gsEntry],]
+                    body = {'values': values}
+                    sheet.values().update(
+                        spreadsheetId=sheetId, 
+                        range='D'+str(key+1)+':'+'D'+str(key+1), 
+                        valueInputOption="RAW", 
+                        body=body).execute()
