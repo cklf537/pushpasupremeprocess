@@ -9,6 +9,10 @@ import gcspreadsheet
 # read configuration
 config_file = 'config-dev.ini'
 config_details = getConfigProperties(config_file)
+dbx = dropbox.Dropbox(config_details['DROPBOX'][0]['dbx.token'])
+Upload_to_path = f"{config_details['DROPBOX'][1]['dbx.uploadto.path']}"
+upload_from_path = config_details['DROPBOX'][2]['dbx.uploadfrom.path']
+mdDataObject = []
 
 # Reading Google spreedshert from cloud.
 # use creds to create a client to interact with the Google Drive API
@@ -42,11 +46,6 @@ def readFrom_googleSheets():
 
 
 #Dropbox 
-dbx = dropbox.Dropbox(config_details['DROPBOX'][0]['dbx.token'])
-Upload_to_path = f"{config_details['DROPBOX'][1]['dbx.uploadto.path']}"
-upload_from_path = config_details['DROPBOX'][2]['dbx.uploadfrom.path']
-mdDataObject = []
-
 # Upload files from local folder to dropbox folder 
 def upload_files(DropBox, fromFolder, toFolder):
     path = os.listdir(fromFolder)
@@ -68,7 +67,6 @@ def update_file_metadata_object(file_meta_data):
     metaDataObject = []
     metaDataObject.append(file_meta_data)
     return metaDataObject;
-
 
 def main():
     upload_files(dbx, upload_from_path, Upload_to_path)
