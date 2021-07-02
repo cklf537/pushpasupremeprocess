@@ -33,6 +33,6 @@ def stripImagesFromSource(imageObject):
     #     postImageUrl = post['image']
     #     headers = {'User-Agent': 'Mozilla/5.0'}
     #     r = requests.get(postImageUrl, headers=headers).content
-    #     with open(f"/home/shekar/Documents/Python/photos/poto/1.jpeg", "wb+") as f:
+    #     with open(f"/Python/photos/poto/1.jpeg", "wb+") as f:
     #         f.write(r)
     #     print(post['text'][:50])
