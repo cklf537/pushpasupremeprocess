@@ -3,15 +3,16 @@ from googleapiclient.discovery import build
 import util
 
 def process_gcp_spreadsheet(token, scope, sheetId, rangeName, dbxobject=[]):
-    creds = token
-    service = build('sheets', 'v4', credentials=creds)
+    # creds = token
+    # service = build('sheets', 'v4', credentials=creds)
 
-    # Call the Sheets API
-    sheet = service.spreadsheets()
-    result = sheet.values().get(spreadsheetId=sheetId, range=rangeName).execute()
-    values = result.get('values', [])
+    # # Call the Sheets API
+    # sheet = service.spreadsheets()
+    # result = sheet.values().get(spreadsheetId=sheetId, range=rangeName).execute()
+    # values = result.get('values', [])
+    values = getValuesFromGCPSheet(token, sheetId, rangeName)
 
-    if not values:
+    if not values[0]:
         print('No data found.')
     else:
         if len(dbxobject) > 0:
@@ -21,8 +22,16 @@ def process_gcp_spreadsheet(token, scope, sheetId, rangeName, dbxobject=[]):
                 if gsEntry is not None:
                     values = [[gsEntry],]
                     body = {'values': values}
-                    sheet.values().update(
+                    values[1].values().update(
                         spreadsheetId=sheetId, 
                         range='D'+str(key+1)+':'+'D'+str(key+1), 
                         valueInputOption="RAW", 
                         body=body).execute()
+
+def getValuesFromGCPSheet(token, sheetId, rangeName):
+    service = build('sheets', 'v4', credentials=token)
+    # Call the Sheets API
+    sheet = service.spreadsheets()
+    result = sheet.values().get(spreadsheetId=sheetId, range=rangeName).execute()
+    values = result.get('values', [])
+    return [values, sheet]

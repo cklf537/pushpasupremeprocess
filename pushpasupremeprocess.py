@@ -5,6 +5,7 @@ import os
 import configparser
 from util import *
 import gcspreadsheet
+from imagestriper import *
 
 # Default configuration
 config_file = 'config-dev.ini'
@@ -60,11 +61,13 @@ def update_file_metadata_object(file_meta_data):
     return metaDataObject;
 
 def main():
-    print('Analayzing files...')
-    upload_files(dbx, upload_from_path, Upload_to_path)
-    print('File upload completed successfully!')
-    readFrom_googleSheets()
-    print('Spreedsheet updated successfully!')
+    # stripImagesFromSource('https://www.facebook.com/tinystep.in/posts/1941947942723976')
+    # print('Analayzing files...')
+    stripImagesFromSource(gcspreadsheet.getValuesFromGCPSheet(creds, gs_sheet_id, gs_read_column))
+    # upload_files(dbx, upload_from_path, Upload_to_path)
+    # print('File upload completed successfully!')
+    # readFrom_googleSheets()
+    # print('Spreedsheet updated successfully!')
 
 if __name__ == '__main__':
     main()
