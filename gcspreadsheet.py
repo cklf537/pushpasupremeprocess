@@ -3,15 +3,7 @@ from googleapiclient.discovery import build
 import util
 
 def process_gcp_spreadsheet(token, scope, sheetId, readRange, dbxobject=[], writeRange='D:D'):
-    # creds = token
-    # service = build('sheets', 'v4', credentials=creds)
-
-    # # Call the Sheets API
-    # sheet = service.spreadsheets()
-    # result = sheet.values().get(spreadsheetId=sheetId, range=readRange).execute()
-    # values = result.get('values', [])
     values = getValuesFromGCPSheet(token, sheetId, readRange)
-
     if not values[0]:
         print('No data found.')
     else:

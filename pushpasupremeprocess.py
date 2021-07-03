@@ -74,7 +74,6 @@ def process_Fb_posts():
         upload_from_path]
     stripImagesFromSource(parms)
 
-
 def main():
     print('Analayz files...')
     print('Download source assets...')
