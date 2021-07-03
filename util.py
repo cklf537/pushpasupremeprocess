@@ -19,20 +19,25 @@ def getConfigProperties(config_file):
 
 def stripAndCompareFBAndDBXId(dbxObject, gsObject):
     gsFbPosId = stripGsObject(gsObject)
-    if dbxObject is not None:
-        for dbxkey, dbxvalue in enumerate(dbxObject):
-            if(dbxvalue == gsFbPosId):
-                return dbxObject[dbxvalue]
-                break
+    if gsFbPosId is not None:
+        if dbxObject is not None:
+            for dbxkey, dbxvalue in enumerate(dbxObject):
+                if(dbxvalue == gsFbPosId):
+                    return dbxObject[dbxvalue]
+                    break
     
 def stripGsObject(gs_Object):
-    gsIds = gs_Object.split('/')
-    return gsIds[len(gsIds)-1][:6]
+    if gs_Object.find('/') != -1:
+        gsIds = gs_Object.split('/')
+        return gsIds[len(gsIds)-1]
+    else:
+        return None
 
 def stripDbxObjectId(dbx_Object):
     dbxIdDict = {}
     for k, val in enumerate(dbx_Object):
         dbxIds = val[0].split('/')
-        dbxId = ((dbxIds[len(dbxIds)-1]).split('_')[1])[:6]
+        # dbxId = ((dbxIds[len(dbxIds)-1]).split('_')[1])[:6]
+        dbxId = ((dbxIds[len(dbxIds)-1]).split('_')[0])
         dbxIdDict.update({dbxId:val[0]})
     return dbxIdDict
